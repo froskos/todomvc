@@ -6,6 +6,7 @@
 		needs: ['todos'],
 		allTodos: Ember.computed.alias('controllers.todos'),
 		itemController: 'todo',
+		sortProperties: ['title'], // sortAscending is true by default, if we wanted reverse alphabetical order then specify sortAscending:false
 		canToggle: function () {
 			var anyTodos = this.get('allTodos.length');
 			var isEditing = this.isAny('isEditing');
