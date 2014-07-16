@@ -14,13 +14,16 @@
 					{{/if}}
 					<ul id="todo-list">
 						{{#each}}
-							<li {{bind-attr class="isCompleted:completed isEditing:editing"}}>
+							<li {{bind-attr class="isCompleted:completed isEditing:editing inBin:inbin"}}>
 								{{#if isEditing}}
 									{{todo-input type="text" class="edit" value=bufferedTitle focus-out="doneEditing" insert-newline="doneEditing" escape-press="cancelEditing"}}
 								{{else}}
+									{{#if inBin}}
+									{{else}}
 									{{input type="checkbox" class="toggle" checked=isCompleted}}
 									<label {{action "editTodo" on="doubleClick"}}>{{title}}</label>
-									<button {{action "removeTodo"}} class="destroy"></button>
+									<button {{action "sendToBin"}} class="destroy"></button>
+									{{/if}}
 								{{/if}}
 								</li>
 						{{/each}}
@@ -47,11 +50,26 @@
 								</li>
 								<li>
 									{{#link-to "todos.completed" activeClass="selected"}}Completed{{/link-to}}
+								</li>								
+								<li>
+									{{#link-to "todos.inbin" activeClass="selected"}}Deleted{{/link-to}}
 								</li>
+
 							</ul>
+							<br>
 							{{#if completed.length}}
 								<button id="clear-completed" {{action "clearCompleted"}}>
 									Clear completed ({{completed.length}})
+								</button>
+							{{/if}}
+							{{#if inbin.length}}
+								<button id="clear-inbin" {{action "clearBin"}}>
+									Clear deleted ({{inbin.length}})
+								</button>
+							{{/if}}
+							{{#if inbin.length}}
+								<button id="restore-inbin" {{action "restoreBin"}}>
+									Restore deleted ({{inbin.length}})
 								</button>
 							{{/if}}
 						</footer>

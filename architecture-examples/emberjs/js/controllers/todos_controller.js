@@ -12,11 +12,11 @@
 				if (!title) {
 					return;
 				}
-
 				// Create the new Todo model
 				todo = this.store.createRecord('todo', {
 					title: title,
-					isCompleted: false
+					isCompleted: false,
+					inBin: false
 				});
 				todo.save();
 
@@ -26,15 +26,27 @@
 
 			clearCompleted: function () {
 				var completed = this.get('completed');
-				completed.invoke('deleteRecord');
+				completed.invoke('sendToBin');
 				completed.invoke('save');
 			},
+
+			clearBin: function () {
+				var inbin = this.get('inbin');
+				inbin.invoke('deleteRecord');
+				inbin.invoke('save');
+			},
+
+			restoreBin: function () {
+				var inbin = this.get('inbin');
+				inbin.invoke('restoreFromBin');
+			}
 		},
 
 		/* properties */
 
 		remaining: Ember.computed.filterBy('model', 'isCompleted', false),
 		completed: Ember.computed.filterBy('model', 'isCompleted', true),
+		inbin: Ember.computed.filterBy('model', 'inBin', true),
 
 		allAreDone: function (key, value) {
 			if (value !== undefined) {

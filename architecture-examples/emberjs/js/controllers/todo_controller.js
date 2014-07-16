@@ -42,13 +42,31 @@
 
 			removeTodo: function () {
 				this.removeTodo();
+			},
+
+			sendToBin: function () {
+				this.sendToBin()
+			},
+			restoreFromBin: function () {
+				this.restoreFromBin();
 			}
 		},
 
 		removeTodo: function () {
 			var todo = this.get('model');
-
 			todo.deleteRecord();
+			todo.save();
+		},
+
+		sendToBin: function () {
+			var todo = this.get('model');
+			todo.sendToBin();
+			todo.save();
+		},
+
+		restoreFromBin: function (){
+			var todo = this.get('model');
+			todo.restoreFromBin();
 			todo.save();
 		},
 

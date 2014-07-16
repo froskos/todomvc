@@ -6,6 +6,7 @@
 		this.resource('todos', { path: '/' }, function () {
 			this.route('active');
 			this.route('completed');
+			this.route('inbin');
 		});
 	});
 
@@ -32,6 +33,14 @@
 		model: function () {
 			return this.store.filter('todo', function (todo) {
 				return todo.get('isCompleted');
+			});
+		}
+	});	
+
+	Todos.TodosInbinRoute = Todos.TodosIndexRoute.extend({
+		model: function () {
+			return this.store.filter('todo', function (todo) {
+				return todo.get('inBin');
 			});
 		}
 	});
