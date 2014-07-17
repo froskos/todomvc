@@ -14,4 +14,7 @@
 			return anyTodos && !isEditing;
 		}.property('allTodos.length', '@each.isEditing')
 	});
+
+	
+
 })();

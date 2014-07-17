@@ -6,6 +6,22 @@
 		<link rel="stylesheet" href="bower_components/todomvc-common/base.css">
 	</head>
 	<body>
+		<script type="text/x-handlebars" data-template-name="lists">
+			<section class="todoapp">
+				<header class="header">
+					<h1>Todos</h1>
+				</header>
+				<section class="main">
+					<ul class="todo-list">
+						{{#each}}
+							<li {{bind-attr class="isCompleted:completed isEditing:editing inBin:inbin"}}>
+								{{#link-to "todos.index" id class="listname" activeClass="selected"}}{{title}}{{/link-to}}
+							</li>
+						{{/each}}
+					</ul>
+				</section>
+			</section>
+		</script>
 		<script type="text/x-handlebars" data-template-name="todo-list">
 			{{#if length}}
 				<section class="main">
@@ -35,7 +51,7 @@
 		<script type="text/x-handlebars" data-template-name="todos">
 			<section class="todoapp">
 				<header class="header">
-					<h1>todos</h1>
+					<h1>{{#link-to "lists"}}Back to lists{{/link-to}}</h1>
 					{{todo-input class="new-todo" type="text" value=newTitle action="createTodo" placeholder="What needs to be done?"}}
 				</header>
 					{{outlet}}
@@ -97,6 +113,7 @@
 		<script src="bower_components/ember-data/ember-data.js"></script>
 		<script src="bower_components/ember-localstorage-adapter/localstorage_adapter.js"></script>
 		<script src="js/app.js"></script>
+		<script src="js/models/list.js"></script>
 		<script src="js/router.js"></script>
 		<script src="js/models/todo.js"></script>
 		<script src="js/controllers/todos_controller.js"></script>

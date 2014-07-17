@@ -6,6 +6,7 @@
 		title: DS.attr('string'),
 		isCompleted: DS.attr('boolean'),
 		inBin: DS.attr('boolean'),
+		listId: DS.attr('string'),
 		sendToBin: function() {
 			this.set('inBin',true);
 			return this;

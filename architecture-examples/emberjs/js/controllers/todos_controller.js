@@ -5,7 +5,9 @@
 	Todos.TodosController = Ember.ArrayController.extend({
 		actions: {
 			createTodo: function () {
-				var title, todo;
+				var title, todo, listId;
+
+				listId = this.target.router.state.params.todos.list_id; //UGLY! having this as the only way to retrieve routing data in the controller feels VERY hacky to me... Is there an elegant way or, let's say an Ember way? I do not want to fight AGAINST Ember! :)
 
 				// Get the todo title set by the "New Todo" text field
 				title = this.get('newTitle').trim();
@@ -16,7 +18,9 @@
 				todo = this.store.createRecord('todo', {
 					title: title,
 					isCompleted: false,
-					inBin: false
+					inBin: false,
+					listId: listId
+
 				});
 				todo.save();
 
@@ -43,14 +47,14 @@
 		},
 
 		/* properties */
-		//the following two filters do the right calculation in the initial rendering (e.g. when refreshing), but do not get recalculated automatically when an item is deleted or marked as completed, why?
+		// now the filters obviously take into the consideration all todo records, as I cannot find how to match them against the current list id
 		remaining: Ember.computed.filter('model', function(todo){
-			return !(todo.get('isCompleted') || todo.get('inBin'));
+			return !(todo.get('isCompleted') || todo.get('inBin')); // We should filter also by Id, but before further hacking I want to know how to properly get and reflect routing state in the controller 
 		}), 
 		completed: Ember.computed.filter('model', function(todo){
 			return todo.get('isCompleted') && !todo.get('inBin');
 		}),
-		inbin: Ember.computed.filterBy('model', 'inBin', true),
+		inbin: Ember.computed.filterBy('model', 'inBin', true), //TODO: replace globally inbin for inBin...
 
 		allAreDone: function (key, value) {
 			if (value !== undefined) {
