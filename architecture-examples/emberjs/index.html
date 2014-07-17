@@ -8,11 +8,11 @@
 	<body>
 		<script type="text/x-handlebars" data-template-name="todo-list">
 			{{#if length}}
-				<section id="main">
+				<section class="main">
 					{{#if canToggle}}
-						{{input type="checkbox" id="toggle-all" checked=allTodos.allAreDone}}
+						{{input type="checkbox" class="toggle-all" checked=allTodos.allAreDone}}
 					{{/if}}
-					<ul id="todo-list">
+					<ul class="todo-list">
 						{{#each}}
 							<li {{bind-attr class="isCompleted:completed isEditing:editing inBin:inbin"}}>
 								{{#if isEditing}}
@@ -33,16 +33,16 @@
 			{{/if}}
 		</script>
 		<script type="text/x-handlebars" data-template-name="todos">
-			<section id="todoapp">
-				<header id="header">
+			<section class="todoapp">
+				<header class="header">
 					<h1>todos</h1>
-					{{todo-input id="new-todo" type="text" value=newTitle action="createTodo" placeholder="What needs to be done?"}}
+					{{todo-input class="new-todo" type="text" value=newTitle action="createTodo" placeholder="What needs to be done?"}}
 				</header>
 					{{outlet}}
 					{{#if length}}
-						<footer id="footer">
-							<span id="todo-count"><strong>{{remaining.length}}</strong> {{pluralize 'item' remaining.length}} left</span>
-							<ul id="filters">
+						<footer class="footer">
+							<span class="todo-count"><strong>{{remaining.length}}</strong> {{pluralize 'item' remaining.length}} left</span>
+							<ul class="filters">
 								<li>
 									{{#link-to "todos.index" activeClass="selected"}}All{{/link-to}}
 								</li>
@@ -59,24 +59,24 @@
 							</ul>
 							<br>
 							{{#if completed.length}}
-								<button id="clear-completed" {{action "clearCompleted"}}>
+								<button class="clear-completed" {{action "clearCompleted"}}>
 									Clear completed ({{completed.length}})
 								</button>
 							{{/if}}
 							{{#if inbin.length}}
-								<button id="clear-inbin" {{action "clearBin"}}>
+								<button class="clear-inbin" {{action "clearBin"}}>
 									Clear deleted ({{inbin.length}})
 								</button>
 							{{/if}}
 							{{#if inbin.length}}
-								<button id="restore-inbin" {{action "restoreBin"}}>
+								<button class="restore-inbin" {{action "restoreBin"}}>
 									Restore deleted ({{inbin.length}})
 								</button>
 							{{/if}}
 						</footer>
 					{{/if}}
 			</section>
-			<footer id="info">
+			<footer class="info">
 				<p>Double-click to edit a todo</p>
 				<p>
 					Created by
