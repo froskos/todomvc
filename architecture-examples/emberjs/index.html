@@ -18,10 +18,11 @@
 								{{#if isEditing}}
 									{{todo-input type="text" class="edit" value=bufferedTitle focus-out="doneEditing" insert-newline="doneEditing" escape-press="cancelEditing"}}
 								{{else}}
-									{{#if inBin}}
-									{{else}}
 									{{input type="checkbox" class="toggle" checked=isCompleted}}
 									<label {{action "editTodo" on="doubleClick"}}>{{title}}</label>
+									{{#if inBin}}
+									<button {{action "removeTodo"}} class="destroy"></button>
+									{{else}}
 									<button {{action "sendToBin"}} class="destroy"></button>
 									{{/if}}
 								{{/if}}

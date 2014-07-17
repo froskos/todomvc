@@ -67,11 +67,11 @@
 		restoreFromBin: function (){
 			var todo = this.get('model');
 			todo.restoreFromBin();
-			todo.save();
+			//todo.save();
 		},
 
 		saveWhenCompleted: function () {
 			this.get('model').save();
-		}.observes('isCompleted')
+		}.observes('isCompleted').observes('inBin')
 	});
 })();

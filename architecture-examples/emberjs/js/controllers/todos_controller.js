@@ -43,9 +43,13 @@
 		},
 
 		/* properties */
-
-		remaining: Ember.computed.filterBy('model', 'isCompleted', false),
-		completed: Ember.computed.filterBy('model', 'isCompleted', true),
+		//the following two filters do the right calculation in the initial rendering (e.g. when refreshing), but do not get recalculated automatically when an item is deleted or marked as completed, why?
+		remaining: Ember.computed.filter('model', function(todo){
+			return !(todo.get('isCompleted') || todo.get('inBin'));
+		}), 
+		completed: Ember.computed.filter('model', function(todo){
+			return todo.get('isCompleted') && !todo.get('inBin');
+		}),
 		inbin: Ember.computed.filterBy('model', 'inBin', true),
 
 		allAreDone: function (key, value) {
