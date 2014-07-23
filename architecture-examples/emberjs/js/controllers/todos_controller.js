@@ -6,7 +6,6 @@
 		actions: {
 			createTodo: function () {
 				var title, todo, listId;
-
 				listId = this.target.router.state.params.todos.list_id; //UGLY! having this as the only way to retrieve routing data in the controller feels VERY hacky to me... Is there an elegant way or, let's say an Ember way? I do not want to fight AGAINST Ember! :)
 
 				// Get the todo title set by the "New Todo" text field

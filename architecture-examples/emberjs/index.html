@@ -10,12 +10,13 @@
 			<section class="todoapp">
 				<header class="header">
 					<h1>Todos</h1>
+					{{todo-input class="new-todo" type="text" value=listTitle action="createList" placeholder="New list name"}}
 				</header>
 				<section class="main">
 					<ul class="todo-list">
 						{{#each}}
 							<li {{bind-attr class="isCompleted:completed isEditing:editing inBin:inbin"}}>
-								{{#link-to "todos.index" id class="listname" activeClass="selected"}}{{title}}{{/link-to}}
+								{{#link-to "todos.index" listId class="listname" activeClass="selected"}}{{title}}{{/link-to}}
 							</li>
 						{{/each}}
 					</ul>
@@ -25,6 +26,10 @@
 		<script type="text/x-handlebars" data-template-name="todo-list">
 			{{#if length}}
 				<section class="main">
+					<header class="header">
+						<h1>Todos</h1>
+						{{todo-input class="new-todo" type="text" value=listTitle action="createList" placeholder="New list name"}}
+					</header>
 					{{#if canToggle}}
 						{{input type="checkbox" class="toggle-all" checked=allTodos.allAreDone}}
 					{{/if}}
@@ -50,47 +55,65 @@
 		</script>
 		<script type="text/x-handlebars" data-template-name="todos">
 			<section class="todoapp">
-				<header class="header">
-					<h1>{{#link-to "lists"}}Back to lists{{/link-to}}</h1>
-					{{todo-input class="new-todo" type="text" value=newTitle action="createTodo" placeholder="What needs to be done?"}}
-				</header>
-					{{outlet}}
-					{{#if length}}
-						<footer class="footer">
-							<span class="todo-count"><strong>{{remaining.length}}</strong> {{pluralize 'item' remaining.length}} left</span>
-							<ul class="filters">
-								<li>
-									{{#link-to "todos.index" activeClass="selected"}}All{{/link-to}}
-								</li>
-								<li>
-									{{#link-to "todos.active" activeClass="selected"}}Active{{/link-to}}
-								</li>
-								<li>
-									{{#link-to "todos.completed" activeClass="selected"}}Completed{{/link-to}}
-								</li>								
-								<li>
-									{{#link-to "todos.inbin" activeClass="selected"}}Deleted{{/link-to}}
-								</li>
-
-							</ul>
-							<br>
-							{{#if completed.length}}
-								<button class="clear-completed" {{action "clearCompleted"}}>
-									Clear completed ({{completed.length}})
-								</button>
-							{{/if}}
-							{{#if inbin.length}}
-								<button class="clear-inbin" {{action "clearBin"}}>
-									Clear deleted ({{inbin.length}})
-								</button>
-							{{/if}}
-							{{#if inbin.length}}
-								<button class="restore-inbin" {{action "restoreBin"}}>
-									Restore deleted ({{inbin.length}})
-								</button>
-							{{/if}}
-						</footer>
-					{{/if}}
+				<section class="main">
+						<header class="header">
+							<h1>{{title}}</h1>
+							{{todo-input class="new-todo" type="text" value=newTitle action="createTodo" placeholder="what needs to be done?"}}
+						</header>
+						<ul class="todo-list">
+						{{#each}}
+								<li {{bind-attr class="isCompleted:completed isEditing:editing inBin:inbin"}}>
+									{{#if isEditing}}
+										{{todo-input type="text" class="edit" value=bufferedTitle focus-out="doneEditing" insert-newline="doneEditing" escape-press="cancelEditing"}}
+									{{else}}
+										{{input type="checkbox" class="toggle" checked=isCompleted}}
+										<label {{action "editTodo" on="doubleClick"}}>{{title}}</label>
+										{{#if inBin}}
+										<button {{action "removeTodo"}} class="destroy"></button>
+										{{else}}
+										<button {{action "sendToBin"}} class="destroy"></button>
+										{{/if}}
+									{{/if}}
+									</li>
+						{{/each}}
+						</ul>
+						{{#if length}}
+-						<footer class="footer">
+-							<span class="todo-count"><strong>{{remaining.length}}</strong> {{pluralize 'item' remaining.length}} left</span>
+-							<ul class="filters">
+-								<li>
+-									{{#link-to "todos.index" activeClass="selected"}}All{{/link-to}}
+-								</li>
+-								<li>
+-									{{#link-to "todos.active" activeClass="selected"}}Active{{/link-to}}
+-								</li>
+-								<li>
+-									{{#link-to "todos.completed" activeClass="selected"}}Completed{{/link-to}}
+-								</li>								
+-								<li>
+-									{{#link-to "todos.inbin" activeClass="selected"}}Deleted{{/link-to}}
+-								</li>
+-
+-							</ul>
+-							<br>
+-							{{#if completed.length}}
+-								<button class="clear-completed" {{action "clearCompleted"}}>
+-									Clear completed ({{completed.length}})
+-								</button>
+-							{{/if}}
+-							{{#if inbin.length}}
+-								<button class="clear-inbin" {{action "clearBin"}}>
+-									Clear deleted ({{inbin.length}})
+-								</button>
+-							{{/if}}
+-							{{#if inbin.length}}
+-								<button class="restore-inbin" {{action "restoreBin"}}>
+-									Restore deleted ({{inbin.length}})
+-								</button>
+-							{{/if}}
+-						</footer>
+-					{{/if}}
+				</section>
 			</section>
 			<footer class="info">
 				<p>Double-click to edit a todo</p>
@@ -118,6 +141,7 @@
 		<script src="js/models/todo.js"></script>
 		<script src="js/controllers/todos_controller.js"></script>
 		<script src="js/controllers/todos_list_controller.js"></script>
+		<script src="js/controllers/lists_controller.js"></script>
 		<script src="js/controllers/todo_controller.js"></script>
 		<script src="js/views/todo_input_component.js"></script>
 		<script src="js/helpers/pluralize.js"></script>

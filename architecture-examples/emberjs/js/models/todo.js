@@ -7,6 +7,7 @@
 		isCompleted: DS.attr('boolean'),
 		inBin: DS.attr('boolean'),
 		listId: DS.attr('string'),
+		list: DS.belongsTo('list'),
 		sendToBin: function() {
 			this.set('inBin',true);
 			return this;
