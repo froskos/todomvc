@@ -4,10 +4,12 @@
 
 	Todos.Router.map(function () {
 		this.resource('lists',{ path: '/' });
-		this.resource('todos.index', { path: '/list/:list_id/' });
-		this.resource('todos.active', { path: '/list/:list_id/active' });
-		this.resource('todos.completed', { path: '/list/:list_id/completed' });
-		this.resource('todos.inbin', { path: '/list/:list_id/inbin' });
+		this.resource('list', { path: '/list/:list_id'}, function() {
+			this.route('index');
+			this.route('active');
+			this.route('completed');
+			this.route('inbin');
+		});
 	});
 
 	Todos.ListsRoute = Ember.Route.extend({
@@ -16,44 +18,47 @@
 		}
 	});
 
-	Todos.TodosRoute = Ember.Route.extend({
-		model: function () {
-			return this.store.find('todos');
-		}
+	Todos.ListRoute = Ember.Route.extend({
+		model: function (params, transition) {
+			var id = +transition.params.list.list_id;
+			return this.store.find('list', {listId:id}).then(function (obj) {
+			    return obj.get('firstObject');
+			});
+		},
 	});
 
-	Todos.TodosIndexRoute = Todos.TodosRoute.extend({
-		templateName: 'todos',
-		controllerName: 'todos-list',
-		model: function (params) {
-			var id = +params.list_id;
-			return this.store.filter('todo', function(todo){
-				return todo.get('listId') == id && !todo.get('inBin');
+	Todos.ListIndexRoute = Todos.ListRoute.extend({
+		controllerName: 'todos',
+		templateName: 'todo-list',
+		model: function (params, transition) {
+			var id = this.modelFor('list').get('listId');
+			return this.store.filter('todo', function(todo) {
+				return !todo.get('inBin') && todo.get('listId') == id;
 			});
 		}
 	});
 
-	Todos.TodosActiveRoute = Todos.TodosIndexRoute.extend({
+	Todos.ListActiveRoute = Todos.ListIndexRoute.extend({
 		model: function (params) {
-			var id = +params.list_id;
+			var id = this.modelFor('list').get('listId');
 			return this.store.filter('todo', function (todo) {
 				return !(todo.get('isCompleted') || todo.get('inBin')) && todo.get('listId') == id;
 			});
 		}
 	});
 
-	Todos.TodosCompletedRoute = Todos.TodosIndexRoute.extend({
+	Todos.ListCompletedRoute = Todos.ListIndexRoute.extend({
 		model: function (params) {
-			var id = +params.list_id;
+			var id = this.modelFor('list').get('listId');
 			return this.store.filter('todo', function (todo) {
 				return todo.get('isCompleted') && !todo.get('inBin') && todo.get('listId') == id;
 			});
 		}
 	});	
 
-	Todos.TodosInbinRoute = Todos.TodosIndexRoute.extend({
+	Todos.ListInbinRoute = Todos.ListIndexRoute.extend({
 		model: function (params) {
-			var id = +params.list_id;
+			var id = this.modelFor('list').get('listId');
 			return this.store.filter('todo', function (todo) {
 				return todo.get('inBin') && todo.get('listId') == id;
 			});
